@@ -9,7 +9,7 @@ export class OpenaiController {
   @Get('/chat/completions')
   async createCompletions(@Query() dto: CreateCompletionsRequestDto) {
     const result = await this.openaiService.createCompletions(dto.userInput);
-    console.log({ input: dto.userInput, result });
+    console.log({ input: dto.userInput, result: JSON.stringify(result) });
     return result;
   }
 }
