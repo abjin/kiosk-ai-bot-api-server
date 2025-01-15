@@ -11,7 +11,7 @@ import { Throttle } from '@nestjs/throttler';
 export class OpenaiController {
   constructor(private readonly openaiService: OpenaiService) {}
 
-  @Throttle({ default: { limit: 200, ttl: 60 * 60 * 24 } })
+  @Throttle({ default: { limit: 200, ttl: 60 * 60 * 24 * 1000 } })
   @Get('/chat/completions')
   async createCompletions(@Query() dto: CreateCompletionsRequestDto) {
     const result = await this.openaiService.createCompletions(dto.userInput);
