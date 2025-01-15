@@ -20,7 +20,7 @@ export class OpenaiService {
         {
           role: 'system',
           content:
-            'From the provided Menu data, select one or more items that best fit the user preferences. Include the selected items in a "recommendedItems" list within a JSON object. If no suitable items are found, return an empty "recommended_items" array.',
+            'From the provided Menu data, select one or more items that best fit the user preferences. Include the selected items in a "recommendedItems" list within a JSON object. If no suitable items are found, return an empty "recommendedItems" array.',
         },
         {
           role: 'system',
