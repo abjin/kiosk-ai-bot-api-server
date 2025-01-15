@@ -1,7 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { OpenaiService } from './openai.service';
 import { CreateCompletionsRequestDto } from './dtos/create-completions-request.dto';
+import { ApiKeyGuard } from 'src/auth/guards/api-key.guard';
 
+@UseGuards(ApiKeyGuard)
 @Controller('openai')
 export class OpenaiController {
   constructor(private readonly openaiService: OpenaiService) {}

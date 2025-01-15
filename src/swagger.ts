@@ -6,14 +6,16 @@ import { name as packageName } from '../package.json';
 
 export function useSwagger(app: INestApplication, path = 'api-docs') {
   const configService = app.get(ConfigService);
+  const username = configService.get('SWAGGER_USERNAME');
+  const password = configService.get('SWAGGER_PASSWORD');
+
+  if (!username || !password) return;
+
   app.use(
     [`/${path}`],
     expressBasicAuth({
       challenge: true,
-      users: {
-        [configService.get('SWAGGER_USERNAME')]:
-          configService.get('SWAGGER_PASSWORD'),
-      },
+      users: { [username]: password },
     }),
   );
 
@@ -21,7 +23,7 @@ export function useSwagger(app: INestApplication, path = 'api-docs') {
     .setTitle(`${packageName}`)
     .setDescription(`${packageName} description`)
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBasicAuth({ 'x-tokenName': 'x-api-key', type: 'apiKey' })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(`/${path}`, app, document, {
