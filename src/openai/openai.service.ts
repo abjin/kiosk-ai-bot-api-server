@@ -1,21 +1,43 @@
 import { Injectable } from '@nestjs/common';
+import { menuMockData } from 'mock-data';
 import OpenAI from 'openai';
-const openai = new OpenAI();
 
 @Injectable()
 export class OpenaiService {
-  async createCompletions() {
-    const completion = await openai.chat.completions.create({
+  private openai = new OpenAI();
+  private menuData = menuMockData;
+
+  async createCompletions(userInput: string) {
+    const completion = await this.openai.chat.completions.create({
       model: 'gpt-4o-mini',
+      response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: 'You are a helpful assistant.' },
+        {
+          role: 'system',
+          content:
+            'You are a helpful AI chatbot that recommends menu items based on user preferences.',
+        },
+        {
+          role: 'system',
+          content:
+            'From the provided Menu data, select one or more items that best fit the user preferences. Include the selected items in a "recommended_items" list within a JSON object. If no suitable items are found, return an empty "recommended_items" array.',
+        },
+        {
+          role: 'system',
+          content:
+            'Explain why these items were selected in Korean and include this explanation in a "text" field within the same JSON object.',
+        },
         {
           role: 'user',
-          content: 'Write a haiku about recursion in programming.',
+          content: `Menu data: ${JSON.stringify(this.menuData)}`,
+        },
+        {
+          role: 'user',
+          content: `Recommend based on: ${userInput}`,
         },
       ],
     });
 
-    return completion;
+    return completion.choices[0].message.content;
   }
 }
